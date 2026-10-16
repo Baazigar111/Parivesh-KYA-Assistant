@@ -479,32 +479,31 @@ def render_clearances_html(clearances: list) -> str:
         else:
             badge_html = '<span class="badge-no">NOT APPLICABLE</span>'
             
-        rows.append(f"""
-        <tr>
-            <td style="font-weight: 700; color: #94a3b8; width: 6%; text-align: center;">{sno}</td>
-            <td style="font-weight: 700; color: #f1f5f9; width: 26%; font-size: 0.95rem;">{approval}</td>
-            <td style="width: 20%;">{badge_html}</td>
-            <td style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.6;">{remarks}</td>
-        </tr>
-        """)
+        rows.append(
+            f'<tr>'
+            f'<td style="font-weight: 700; color: #94a3b8; width: 6%; text-align: center;">{sno}</td>'
+            f'<td style="font-weight: 700; color: #f1f5f9; width: 26%; font-size: 0.95rem;">{approval}</td>'
+            f'<td style="width: 20%;">{badge_html}</td>'
+            f'<td style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.6;">{remarks}</td>'
+            f'</tr>'
+        )
         
-    return f"""
-    <div class="clearance-table-wrapper">
-        <table class="clearance-table">
-            <thead>
-                <tr>
-                    <th style="text-align: center;">#</th>
-                    <th>Approval / Clearance</th>
-                    <th>Applicability</th>
-                    <th>Regulatory Remarks & Provisions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {''.join(rows)}
-            </tbody>
-        </table>
-    </div>
-    """
+    tbody = "".join(rows)
+    return (
+        '<div class="clearance-table-wrapper">'
+        '<table class="clearance-table">'
+        '<thead>'
+        '<tr>'
+        '<th style="text-align: center;">#</th>'
+        '<th>Approval / Clearance</th>'
+        '<th>Applicability</th>'
+        '<th>Regulatory Remarks & Provisions</th>'
+        '</tr>'
+        '</thead>'
+        f'<tbody>{tbody}</tbody>'
+        '</table>'
+        '</div>'
+    )
 
 
 # ── Toposheet and Location HTML Renderer (matches PARIVESH format) ─────────────
@@ -518,12 +517,12 @@ def render_geoloc_html(toposheet: str, locations: list) -> str:
 
     # 1. Toposheet Box
     if toposheet:
-        html.append(f"""
-        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0 1.25rem 0;">
-            <div style="font-size: 0.85rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.4rem;">Toposheet No.</div>
-            <div style="color: #2563eb; font-size: 1.05rem; font-weight: 700; line-height: 1.6; word-break: break-word;">{toposheet}</div>
-        </div>
-        """)
+        html.append(
+            f'<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0 1.25rem 0;">'
+            f'<div style="font-size: 0.85rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.4rem;">Toposheet No.</div>'
+            f'<div style="color: #38bdf8; font-size: 1.05rem; font-weight: 700; line-height: 1.6; word-break: break-word;">{toposheet}</div>'
+            f'</div>'
+        )
 
     # 2. State / District / Village Table
     if locations:
@@ -541,30 +540,30 @@ def render_geoloc_html(toposheet: str, locations: list) -> str:
                 vill = item.get("Village", "")
                 row_html = '<tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">'
                 if idx == 0:
-                    row_html += f'<td rowspan="{rowspan}" style="vertical-align: top; padding: 1rem; border-right: 1px solid rgba(255,255,255,0.08); font-weight: 800; color: #2563eb; font-size: 1.1rem; letter-spacing: 0.5px; text-transform: uppercase;">{st_name}</td>'
+                    row_html += f'<td rowspan="{rowspan}" style="vertical-align: top; padding: 1rem; border-right: 1px solid rgba(255,255,255,0.08); font-weight: 800; color: #38bdf8; font-size: 1.1rem; letter-spacing: 0.5px; text-transform: uppercase;">{st_name}</td>'
                 row_html += f'<td style="vertical-align: top; padding: 1rem; border-right: 1px solid rgba(255,255,255,0.08); font-weight: 600; font-size: 0.95rem; white-space: nowrap;">{dist}</td>'
-                row_html += f'<td style="vertical-align: top; padding: 1rem; color: #2563eb; font-size: 0.92rem; line-height: 1.65;">{vill}</td>'
+                row_html += f'<td style="vertical-align: top; padding: 1rem; color: #94a3b8; font-size: 0.92rem; line-height: 1.65;">{vill}</td>'
                 row_html += "</tr>"
                 table_rows.append(row_html)
 
-        html.append(f"""
-        <div style="border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; overflow: hidden; margin-top: 0.5rem; background: rgba(255, 255, 255, 0.01);">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
-                        <th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8; width: 22%;">State <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>
-                        <th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8; width: 22%;">District <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>
-                        <th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8;">Village <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {"".join(table_rows)}
-                </tbody>
-            </table>
-        </div>
-        """)
+        tbody_loc = "".join(table_rows)
+        html.append(
+            f'<div style="border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; overflow: hidden; margin-top: 0.5rem; background: rgba(255, 255, 255, 0.01);">'
+            f'<table style="width: 100%; border-collapse: collapse; text-align: left;">'
+            f'<thead>'
+            f'<tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.12);">'
+            f'<th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8; width: 22%;">State <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>'
+            f'<th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8; width: 22%;">District <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>'
+            f'<th style="padding: 0.85rem 1rem; font-size: 0.85rem; font-weight: 700; color: #94a3b8;">Village <span style="font-size: 0.7rem; opacity: 0.7;">&#9662;</span></th>'
+            f'</tr>'
+            f'</thead>'
+            f'<tbody>{tbody_loc}</tbody>'
+            f'</table>'
+            f'</div>'
+        )
 
     return "".join(html)
+
 
 
 # ── Result extraction from reportCard DOM ─────────────────────────────────────
