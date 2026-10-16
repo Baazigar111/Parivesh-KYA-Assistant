@@ -18,6 +18,9 @@ RUN playwright install chromium
 
 # Copy application files
 COPY app.py .
+COPY parivesh_api.py .
+COPY parivesh_engine.py .
+COPY ui_components.py .
 COPY captcha_solver.py .
 COPY captcha_model.onnx .
 COPY captcha_model.onnx.data .

@@ -26,7 +26,10 @@ An executive-grade web application and automation console built with **Streamlit
 ```text
 parivesh_scrap/
 │
-├── app.py                      # Main Streamlit web application & Playwright automation
+├── app.py                      # Thin Streamlit UI controller (~180 lines)
+├── parivesh_engine.py          # Playwright automation, Camunda DMN intercept & extraction engine
+├── parivesh_api.py             # API client and local caching for master activities
+├── ui_components.py            # Glassmorphism CSS design system & custom HTML table cards
 ├── captcha_solver.py           # Dual-engine CAPTCHA solver (ddddocr + ONNX CNN fallback)
 ├── captcha_model.onnx          # Neural network model architecture
 ├── captcha_model.onnx.data     # Model weights for ONNX fallback solver
