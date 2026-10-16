@@ -777,7 +777,6 @@ def run_full_automated_lookup(
 # ── Streamlit Interface ────────────────────────────────────────────────────────
 
 st.title("🌿 PARIVESH KYA — Green Clearances Assistant")
-st.markdown("Automated clearance evaluation · CAPTCHA solved automatically via **ddddocr** · KML or point coordinates.")
 
 col_left, col_right = st.columns([1, 1], gap="large")
 
@@ -834,16 +833,7 @@ with col_left:
         with c2:
             lon_val = st.number_input("Longitude", value=72.8356, format="%.5f")
 
-    st.markdown("---")
-    with st.expander("🔐 CAPTCHA Override (optional)", expanded=False):
-        st.caption("Auto-solves via ddddocr. Fill only if auto-result is wrong.")
-        user_captcha = st.text_input("Manual CAPTCHA Code", value="", placeholder="Leave blank for auto-solve", key="captcha_override")
-        if os.path.exists(CAPTCHA_PNG):
-            st.image(CAPTCHA_PNG, caption="Last captured CAPTCHA")
-            if "last_captcha_text" in st.session_state:
-                conf = st.session_state.get("last_captcha_conf", 0.0)
-                badge = "🟢" if conf >= 0.6 else "🟡" if conf >= 0.4 else "🔴"
-                st.info(f"{badge} Auto-solved: **{st.session_state['last_captcha_text']}** ({conf*100:.0f}% confidence)")
+    user_captcha = ""
 
     st.markdown("---")
     start_btn = st.button("🚀 Check Tentative Clearances", type="primary", use_container_width=True, key="start_btn")
@@ -867,10 +857,7 @@ with col_right:
                 )
 
             if report is None:
-                if os.path.exists(CAPTCHA_PNG):
-                    st.subheader("🔐 CAPTCHA Snapshot")
-                    st.image(CAPTCHA_PNG, caption="Portal CAPTCHA Image")
-                st.info("**Next:** If CAPTCHA auto-detection is wrong, open CAPTCHA Override, correct it, and re-submit.")
+                st.error("Evaluation could not be completed. Please verify your inputs and try again.")
 
             elif report.get("clearances"):
                 st.success(f"✅ {len(report['clearances'])} Clearances Retrieved!")
