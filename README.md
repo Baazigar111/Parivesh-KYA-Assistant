@@ -1,24 +1,23 @@
 # 🌿 PARIVESH 2.0 KYA Clearance Assistant
 
-An automated web application and scraper built with **Streamlit** and **Playwright** to query and extract Tentative Clearances (Environmental, Forest, Wildlife, and CRZ) from the Ministry of Environment, Forest and Climate Change (MoEFCC) **PARIVESH 2.0 KYA (Know Your Approvals)** portal.
+An executive-grade web application and automation console built with **Streamlit** and **Playwright** to query and evaluate Tentative Clearances (Environmental, Forest, Wildlife, and CRZ) from the Ministry of Environment, Forest and Climate Change (MoEFCC) **PARIVESH 2.0 KYA (Know Your Approvals)** portal.
 
 ---
 
 ## 🚀 Key Features
 
-- **Automated KYA Evaluation:** Automates project activity selection, capacity input, and location submission on `parivesh.nic.in/kya/#/`.
+- **Executive Glassmorphism UI:** Modern dark-mode console with custom typography (*Plus Jakarta Sans* & *Inter*), responsive glowing status badges, and 4-metric KPI summary cards.
+- **Automated KYA Evaluation:** Automates project activity selection, sub-activity classification, capacity input, and location submission on `parivesh.nic.in/kya/#/`.
 - **Dual Location Modes:**
   - **Point Location:** Provide custom Latitude and Longitude coordinates.
-  - **Upload KML:** Upload any project boundary `.kml` file.
-- **Dual-Engine CAPTCHA Solver:**
-  - **Primary:** `ddddocr` pre-trained alphanumeric OCR (~95% accuracy).
-  - **Fallback:** Local custom ONNX CNN model (`captcha_model.onnx`) with strip segmentation.
-  - **Manual Override:** Interactive expander in Streamlit allowing manual CAPTCHA correction if needed.
-- **Camunda DMN Network Intercept:** Intercepts the portal's background `/evaluate` API response to guarantee 100% complete, un-truncated legal remarks and applicability badges (Yes/No).
-- **Comprehensive Clearance Report:**
-  - Full Tentative Clearances summary table across all 4 clearances (Environmental, Forest, Wildlife, CRZ).
-  - Toposheet Number & hierarchical State / District / Village location tables.
-  - Proximity to eco-sensitive layers, protected areas, and water bodies.
+  - **Upload KML:** Upload any project boundary `.kml` polygon file.
+- **Zero-Click CAPTCHA Engine:** Fully automatic recognition using **`ddddocr`** (~95% accuracy) backed by a local ONNX CNN fallback model (`captcha_model.onnx`).
+- **Camunda DMN Network Intercept:** Intercepts the portal's background `/evaluate` decision payload to guarantee 100% complete, un-truncated legal remarks and official applicability status.
+- **Comprehensive Clearance Intelligence:**
+  - Full Tentative Clearances card across all 4 pillars (Environmental, Forest, Wildlife, CRZ) with glowing applicability badges.
+  - Toposheet Number & hierarchical administrative location tables (State, District, Village).
+  - Proximity spatial layers to eco-sensitive zones and water bodies.
+  - One-click export to CSV and JSON formats.
 
 ---
 
@@ -28,13 +27,17 @@ An automated web application and scraper built with **Streamlit** and **Playwrig
 parivesh_scrap/
 │
 ├── app.py                      # Main Streamlit web application & Playwright automation
-├── captcha_solver.py           # CAPTCHA recognition engine (ddddocr + ONNX CNN fallback)
-├── captcha_model.onnx          # ONNX neural network model architecture
+├── captcha_solver.py           # Dual-engine CAPTCHA solver (ddddocr + ONNX CNN fallback)
+├── captcha_model.onnx          # Neural network model architecture
 ├── captcha_model.onnx.data     # Model weights for ONNX fallback solver
-├── parivesh_activities.json    # Local cache of project activities for instant dropdown loading
-├── test_polygon.kml            # Sample polygon file for testing KML upload
-├── README.md                   # Project documentation
-└── venv/                       # Python virtual environment (dependencies & Playwright browsers)
+├── parivesh_activities.json    # Local activities cache for instant dropdown loading
+├── start_app_with_tunnel.bat   # 1-click launcher for Streamlit + Cloudflare Tunnel
+├── requirements.txt            # Python dependencies for production deployment
+├── Dockerfile                  # Container definition based on official Playwright Linux image
+├── render.yaml                 # Blueprint configuration for cloud deployments
+├── .dockerignore               # Docker build exclusions
+├── .gitignore                  # Git exclusions (venv, cache, temporary files)
+└── README.md                   # Project documentation
 ```
 
 ---
@@ -46,7 +49,7 @@ parivesh_scrap/
 - **Google Chrome / Chromium:** Managed automatically via Playwright
 
 ### 2. Setup Virtual Environment
-If setting up on a new machine:
+If cloning or setting up on a new machine:
 ```bash
 # Create virtual environment
 python -m venv venv
@@ -57,51 +60,55 @@ python -m venv venv
 
 ### 3. Install Required Packages
 ```bash
-pip install streamlit playwright ddddocr onnxruntime pillow requests pandas
+pip install -r requirements.txt
 playwright install chromium
 ```
 
 ---
 
-## 🏃 How to Run
+## 🏃 Running the Application
 
-1. Open a terminal in the project directory:
-   ```bash
-   cd d:\Train\15oct26\parivesh_scrap
-   ```
+### Option A: 1-Click Launch with Cloudflare Tunnel (Recommended)
+Because `parivesh.nic.in` is an Indian Government portal protected by Geo-Firewalls, running the app locally through your Indian internet connection guarantees unblocked access, while Cloudflare provides a public HTTPS URL accessible from anywhere:
 
-2. Activate the virtual environment:
-   ```powershell
-   .\venv\Scripts\Activate.ps1
-   ```
+1. Double-click **`start_app_with_tunnel.bat`**.
+2. The script will automatically launch Streamlit and output a secure public URL (e.g. `https://your-tunnel-name.trycloudflare.com`).
 
-3. Launch the Streamlit application:
-   ```bash
-   streamlit run app.py
-   ```
+---
 
-4. Open your web browser and navigate to:
-   ```text
-   http://localhost:8501
-   ```
+### Option B: Local Streamlit Execution
+```powershell
+.\venv\Scripts\Activate.ps1
+streamlit run app.py
+```
+Open your browser at `http://localhost:8501`.
+
+---
+
+### Option C: Docker Container Deployment
+Build and run the containerized application:
+```bash
+docker build -t parivesh-kya-assistant .
+docker run -p 10000:10000 parivesh-kya-assistant
+```
 
 ---
 
 ## 📖 How to Use
 
-1. **Select Activity & Sub-Activity:** Choose the relevant industry/project sector from the dropdowns.
-2. **Set Project Capacity:** Enter the project extent/capacity value (e.g. `250`).
-3. **Specify Location:**
+1. **Project Specifications:** Select the relevant industry/activity and sub-activity from the dropdowns, then specify the project extent/capacity.
+2. **Geospatial Location:**
    - Choose **Point Location** and enter Latitude & Longitude, OR
-   - Choose **Upload KML** and upload a `.kml` boundary file (or use `test_polygon.kml` for testing).
-4. **Click "Check Tentative Clearances":**
-   - The app launches headless Chromium, fills all form fields, auto-solves the portal CAPTCHA, and evaluates clearance requirements.
-5. **View Results:**
-   - Review the Tentative Clearances table with official applicability badges (**Applicable** / **Not Applicable**).
-   - Inspect the generated Toposheet number and hierarchical administrative location tables.
-   - If the portal ever generates an ambiguous CAPTCHA, expand the **🔐 CAPTCHA Override** panel, enter the code manually, and re-submit.
+   - Choose **Upload KML** and upload a project `.kml` boundary.
+3. **Click "EVALUATE TENTATIVE CLEARANCES":**
+   - The system launches headless Chromium, fills form parameters, solves the CAPTCHA automatically, and evaluates clearance requirements via Camunda DMN.
+4. **Review Report:**
+   - Review the **KPI Stat Strip** (Total Clearances, Applicable count, Exempt count, Toposheet).
+   - Inspect the **Tentative Clearances Summary** card with official applicability badges and un-truncated legal remarks.
+   - View the hierarchical State/District/Village location breakdown and proximity buffer tables.
+   - Download the full report as CSV or JSON.
 
 ---
 
 ## ⚖️ License & Disclaimer
-This tool is designed for research, compliance assistance, and educational purposes to interact with public government environmental approval portals. Ensure compliance with PARIVESH portal terms of service when utilizing automated queries.
+This tool is designed for research, environmental compliance analysis, and educational purposes to interact with public government environmental approval portals. Ensure compliance with PARIVESH portal terms of service when utilizing automated queries.
