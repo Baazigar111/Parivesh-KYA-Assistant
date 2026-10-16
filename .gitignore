@@ -8,3 +8,5 @@ __pycache__/
 *.kml
 .vscode/
 debug/
+ngrok.exe
+*.zip
